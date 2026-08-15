@@ -1,0 +1,30 @@
+from .sequence import Sequence
+
+def sequence_length(sequence: Sequence) -> int:
+    """
+    Returns the length of a given sequence.
+
+    Args:
+        sequence (Sequence): The sequence object.
+
+    Returns:
+        int: The length of the sequence.
+    """
+    return len(sequence.sequence)
+
+
+def nucleotide_count(sequence: Sequence) -> dict[str, int]:
+    """
+    Returns a dictionary with the count of each nucleotide in the sequence.
+
+    Args:
+        sequence (Sequence): The sequence object.
+
+    Returns:
+        dict: A dictionary with nucleotides as keys and their counts as values.
+    """
+    counts = {"A": 0, "T": 0, "G": 0, "C": 0, "N": 0}
+    for nucleotide in sequence.sequence:
+        if nucleotide in counts:
+            counts[nucleotide] += 1
+    return counts
