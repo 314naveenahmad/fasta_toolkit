@@ -28,3 +28,23 @@ def nucleotide_count(sequence: Sequence) -> dict[str, int]:
         if nucleotide in counts:
             counts[nucleotide] += 1
     return counts
+
+def gc_content(sequence: Sequence) -> float:
+    """
+    Calculates the GC content of a given sequence.
+
+    Args:
+        sequence (Sequence): The sequence object.
+
+    Returns:
+        float: The GC content as a percentage.
+    """
+    counts = nucleotide_count(sequence)
+    total_count = sequence_length(sequence)
+    if total_count == 0:
+        return 0.0
+    gc_count = counts["G"] + counts["C"]
+    return round((gc_count / total_count) * 100, 2)
+
+
+
