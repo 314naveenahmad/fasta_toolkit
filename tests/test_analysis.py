@@ -1,5 +1,5 @@
 import pytest
-from fasta_toolkit.analysis import sequence_length, nucleotide_count, gc_content, reverse_complement, transcribe, find_motif
+from fasta_toolkit.analysis import sequence_length, nucleotide_count, gc_content, reverse_complement, transcribe, find_motif, translate
 from fasta_toolkit.sequence import Sequence
 
 
@@ -328,4 +328,75 @@ def test_find_motif_empty_motif():
         find_motif(seq, "")
 
 
-    
+def test_translate():
+    seq = Sequence(
+        id="seq1",
+        description="Basic coding sequence",
+        sequence="ATGGCCATT"
+    )
+
+    assert translate(seq) == "MAI"
+
+
+def test_translate_with_stop_codon():
+    seq = Sequence(
+        id="seq1",
+        description="Sequence with stop",
+        sequence="ATGTAA"
+    )
+
+    assert translate(seq) == "M*"
+
+
+def test_translate_frame_2():
+    seq = Sequence(
+        id="seq1",
+        description="Frame 2",
+        sequence="ATGGCCATT"
+    )
+
+    assert translate(seq, frame=2) == "WP"
+
+
+def test_translate_frame_3():
+    seq = Sequence(
+        id="seq1",
+        description="Frame 3",
+        sequence="ATGGCCATT"
+    )
+
+    assert translate(seq, frame=3) == "GH"
+
+
+def test_translate_incomplete_codon():
+    seq = Sequence(
+        id="seq1",
+        description="Incomplete codon",
+        sequence="ATGGCCA"
+    )
+
+    assert translate(seq) == "MA"
+
+
+def test_translate_ambiguous_codon():
+    seq = Sequence(
+        id="seq1",
+        description="Ambiguous codon",
+        sequence="ATGGCN"
+    )
+
+    assert translate(seq) == "MX"
+
+
+def test_translate_invalid_frame():
+    seq = Sequence(
+        id="seq1",
+        description="Invalid frame",
+        sequence="ATGGCC"
+    )
+
+    with pytest.raises(ValueError, match="Frame must be 1, 2, or 3"):
+        translate(seq, frame=4)
+
+
+
