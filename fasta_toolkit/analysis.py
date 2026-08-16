@@ -67,3 +67,18 @@ def reverse_complement(sequence: Sequence) -> str:
     }
 
     return "".join(complement[base] for base in reversed(sequence.sequence))
+
+
+def transcribe(sequence: Sequence) -> str:
+    """
+    Transcribe a DNA sequence to RNA by replacing thymine (T) with uracil (U).
+    
+    Args:
+        sequence (Sequence): The DNA sequence object.
+        
+    Returns:
+        str: The transcribed RNA sequence.
+        
+    """
+
+    return sequence.sequence.replace("T", "U")

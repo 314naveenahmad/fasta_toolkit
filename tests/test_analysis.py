@@ -1,4 +1,4 @@
-from fasta_toolkit.analysis import sequence_length, nucleotide_count, gc_content, reverse_complement
+from fasta_toolkit.analysis import sequence_length, nucleotide_count, gc_content, reverse_complement, transcribe
 from fasta_toolkit.sequence import Sequence
 
 
@@ -214,5 +214,55 @@ def test_reverse_complement_lowercase_sequence():
     )
 
     assert reverse_complement(seq) == "GCAT"
+
+
+def test_transcribe():
+    seq = Sequence(
+        id="seq1",
+        description="Example DNA",
+        sequence="ATGC"
+    )
+
+    assert transcribe(seq) == "AUGC"
+
+
+def test_transcribe_all_thymine():
+    seq = Sequence(
+        id="seq1",
+        description="Thymine sequence",
+        sequence="TTTT"
+    )
+
+    assert transcribe(seq) == "UUUU"
+
+
+def test_transcribe_without_thymine():
+    seq = Sequence(
+        id="seq1",
+        description="No thymine",
+        sequence="AGCG"
+    )
+
+    assert transcribe(seq) == "AGCG"
+
+
+def test_transcribe_with_ambiguous_base():
+    seq = Sequence(
+        id="seq1",
+        description="Sequence containing N",
+        sequence="ATGCN"
+    )
+
+    assert transcribe(seq) == "AUGCN"
+
+
+def test_transcribe_lowercase_sequence():
+    seq = Sequence(
+        id="seq1",
+        description="Lowercase DNA",
+        sequence="atgc"
+    )
+
+    assert transcribe(seq) == "AUGC"
 
 
