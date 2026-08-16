@@ -47,4 +47,23 @@ def gc_content(sequence: Sequence) -> float:
     return round((gc_count / total_count) * 100, 2)
 
 
+def reverse_complement(sequence: Sequence) -> str:
+    """
+    Return the reverse complement of a given sequence.
+    
+    Args:
+        sequence (Sequence): The sequence object
+    
+    Returns:
+        str: The reverse complement of the sequence.
+    
+    """
+    complement = {
+        "A": "T",
+        "T": "A",
+        "G": "C",
+        "C": "G",
+        "N": "N"
+    }
 
+    return "".join(complement[base] for base in reversed(sequence.sequence))

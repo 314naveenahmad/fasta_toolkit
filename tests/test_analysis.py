@@ -1,4 +1,4 @@
-from fasta_toolkit.analysis import sequence_length, nucleotide_count, gc_content
+from fasta_toolkit.analysis import sequence_length, nucleotide_count, gc_content, reverse_complement
 from fasta_toolkit.sequence import Sequence
 
 
@@ -164,3 +164,55 @@ def test_gc_content_with_ambiguous_bases():
     )
 
     assert gc_content(seq) == 33.33
+
+
+def test_reverse_complement():
+    seq = Sequence(
+        id="seq1",
+        description="Example sequence",
+        sequence="ATGC"
+    )
+
+    assert reverse_complement(seq) == "GCAT"
+
+
+def test_reverse_complement_palindrome():
+    seq = Sequence(
+        id="seq1",
+        description="Palindromic sequence",
+        sequence="ATGCAT"
+    )
+
+    assert reverse_complement(seq) == "ATGCAT"
+
+
+def test_reverse_complement_single_base():
+    seq = Sequence(
+        id="seq1",
+        description="Single nucleotide",
+        sequence="A"
+    )
+
+    assert reverse_complement(seq) == "T"
+
+
+def test_reverse_complement_with_ambiguous_base():
+    seq = Sequence(
+        id="seq1",
+        description="Sequence containing N",
+        sequence="ATGCN"
+    )
+
+    assert reverse_complement(seq) == "NGCAT"
+
+
+def test_reverse_complement_lowercase_sequence():
+    seq = Sequence(
+        id="seq1",
+        description="Lowercase sequence",
+        sequence="atgc"
+    )
+
+    assert reverse_complement(seq) == "GCAT"
+
+
