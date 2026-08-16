@@ -29,6 +29,8 @@ def nucleotide_count(sequence: Sequence) -> dict[str, int]:
             counts[nucleotide] += 1
     return counts
 
+
+
 def gc_content(sequence: Sequence) -> float:
     """
     Calculates the GC content of a given sequence.
@@ -82,3 +84,33 @@ def transcribe(sequence: Sequence) -> str:
     """
 
     return sequence.sequence.replace("T", "U")
+
+
+def find_motif(sequence: Sequence, motif: str) -> list[int]:
+    """
+    Find all occurrences of a motif in a DNA sequnce.
+
+    Args:
+        sequence (Sequence): The DNA sequence object.
+        motif (str): The motif to search for.
+
+    Returns:
+        list: A list of starting positions (1-based) where motif occurs.
+
+    """
+
+    motif = motif.upper()
+    if not motif:
+        raise ValueError("Motif cannot be empty.")
+
+    positions = []
+    start = 0
+    while True:
+        start = sequence.sequence.find(motif, start)
+        if start == -1:
+            break
+        positions.append(start + 1)
+        start += 1  # Move past the last found motif
+
+    return positions
+

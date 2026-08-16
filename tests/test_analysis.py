@@ -1,4 +1,5 @@
-from fasta_toolkit.analysis import sequence_length, nucleotide_count, gc_content, reverse_complement, transcribe
+import pytest
+from fasta_toolkit.analysis import sequence_length, nucleotide_count, gc_content, reverse_complement, transcribe, find_motif
 from fasta_toolkit.sequence import Sequence
 
 
@@ -266,3 +267,65 @@ def test_transcribe_lowercase_sequence():
     assert transcribe(seq) == "AUGC"
 
 
+def test_find_motif():
+    seq = Sequence(
+        id="seq1",
+        description="Example sequence",
+        sequence="ATGCGTAC"
+    )
+
+    assert find_motif(seq, "CGT") == [4]
+
+
+def test_find_motif_multiple_occurrences():
+    seq = Sequence(
+        id="seq1",
+        description="Repeated motif",
+        sequence="ATGCGATGACCTGATG"
+    )
+
+    assert find_motif(seq, "ATG") == [1, 6, 14]
+
+
+def test_find_motif_not_found():
+    seq = Sequence(
+        id="seq1",
+        description="No motif",
+        sequence="AAAAAA"
+    )
+
+    assert find_motif(seq, "CG") == []
+
+
+def test_find_motif_overlapping():
+    seq = Sequence(
+        id="seq1",
+        description="Overlapping motif",
+        sequence="ATATAT"
+    )
+
+    assert find_motif(seq, "ATA") == [1, 3]
+
+
+def test_find_motif_lowercase_motif():
+    seq = Sequence(
+        id="seq1",
+        description="DNA sequence",
+        sequence="ATGCGTATG"
+    )
+
+    assert find_motif(seq, "atg") == [1, 7]
+
+
+def test_find_motif_empty_motif():
+    seq = Sequence(
+        id="seq1",
+        description="Example sequence",
+        sequence="ATGC"
+    )
+
+    with pytest.raises(ValueError, match="Motif cannot be empty"):
+        find_motif(seq, "")
+
+
+    
