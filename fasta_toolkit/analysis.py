@@ -172,4 +172,41 @@ def translate(sequence: Sequence, frame: int = 1) -> str:
     return "".join(protein)
 
 
+def find_orfs(sequence: Sequence) -> list[str]:
+    """
+    Find open reading frames in a DNA sequence.
+
+    An ORF starts with ATG and ends at the first in-frame
+    stop codon (TAA, TAG, or TGA).
+
+    Args:
+        sequence: The DNA Sequence object.
+
+    Returns:
+        A list of ORF DNA sequences.
+    """
+
+    stop_codons = {"TAA", "TAG", "TGA"}
+    orfs = []
+
+    dna = sequence.sequence
+
+    for frame in range(3):
+        start = frame
+
+        while start <= len(dna) - 3:
+            codon = dna[start:start + 3]
+
+            if codon == "ATG":
+                for i in range(start + 3, len(dna) - 2, 3):
+                    stop = dna[i:i + 3]
+
+                    if stop in stop_codons:
+                        orfs.append(dna[start:i + 3])
+                        break
+
+            start += 3
+
+    return orfs
+
 

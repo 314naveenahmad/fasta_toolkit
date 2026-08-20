@@ -1,5 +1,5 @@
 import pytest
-from fasta_toolkit.analysis import sequence_length, nucleotide_count, gc_content, reverse_complement, transcribe, find_motif, translate
+from fasta_toolkit.analysis import sequence_length, nucleotide_count, gc_content, reverse_complement, transcribe, find_motif, translate, find_orfs
 from fasta_toolkit.sequence import Sequence
 
 
@@ -398,5 +398,87 @@ def test_translate_invalid_frame():
     with pytest.raises(ValueError, match="Frame must be 1, 2, or 3"):
         translate(seq, frame=4)
 
+
+def test_find_orfs():
+    seq = Sequence(
+        id="seq1",
+        description="Basic ORF",
+        sequence="ATGAAACCCGGGTAG"
+    )
+
+    assert find_orfs(seq) == [
+        "ATGAAACCCGGGTAG"
+    ]
+
+
+def test_find_orfs_no_orf():
+    seq = Sequence(
+        id="seq1",
+        description="No ORF",
+        sequence="AAACCCGGG"
+    )
+
+    assert find_orfs(seq) == []
+
+
+def test_find_orfs_with_tga():
+    seq = Sequence(
+        id="seq1",
+        description="ORF ending in TGA",
+        sequence="ATGCCCTGA"
+    )
+
+    assert find_orfs(seq) == [
+        "ATGCCCTGA"
+    ]
+
+
+def test_find_orfs_uses_first_stop_codon():
+    seq = Sequence(
+        id="seq1",
+        description="Multiple stop codons",
+        sequence="ATGAAATAACCCCTAG"
+    )
+
+    assert find_orfs(seq) == [
+        "ATGAAATAA"
+    ]
+
+
+def test_find_orfs_frame_two():
+    seq = Sequence(
+        id="seq1",
+        description="ORF in frame 2",
+        sequence="AATGAAATAG"
+    )
+
+    assert find_orfs(seq) == [
+        "ATGAAATAG"
+    ]
+
+
+def test_find_multiple_orfs():
+    seq = Sequence(
+        id="seq1",
+        description="Multiple ORFs",
+        sequence="ATGAAATAGCCCATGCCCTAA"
+    )
+
+    assert find_orfs(seq) == [
+        "ATGAAATAG",
+        "ATGCCCTAA"
+    ]
+
+
+def test_find_orfs_lowercase_sequence():
+    seq = Sequence(
+        id="seq1",
+        description="Lowercase ORF",
+        sequence="atgaaataA"
+    )
+
+    assert find_orfs(seq) == [
+        "ATGAAATAA"
+    ]
 
 
