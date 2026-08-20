@@ -482,3 +482,80 @@ def test_find_orfs_lowercase_sequence():
     ]
 
 
+def test_find_orfs_reverse_complement():
+    seq = Sequence(
+        id="seq1",
+        description="Reverse strand ORF",
+        sequence="TTACCCCAT"
+    )
+
+    assert find_orfs(seq) == [
+        "ATGGGGTAA"
+    ]
+
+
+def test_find_orfs_reverse_complement_frame_two():
+    seq = Sequence(
+        id="seq1",
+        description="Reverse strand frame two",
+        sequence="TTACCCCATT"
+    )
+
+    assert find_orfs(seq) == [
+        "ATGGGGTAA"
+    ]
+
+
+def test_find_orfs_no_reverse_orf():
+    seq = Sequence(
+        id="seq1",
+        description="No reverse ORF",
+        sequence="AAACCCGGG"
+    )
+
+    assert find_orfs(seq) == []
+
+
+def test_find_orfs_both_strands():
+    seq = Sequence(
+        id="seq1",
+        description="ORFs on both strands",
+        sequence="ATGAAATAGTTACCCCAT"
+    )
+
+    assert find_orfs(seq) == [
+        "ATGAAATAG",
+        "ATGGGGTAA"
+    ]
+
+
+def test_reverse_complement_orf_sequence():
+    seq = Sequence(
+        id="seq1",
+        description="Reverse strand",
+        sequence="TTACCCCAT"
+    )
+
+    reverse_seq = Sequence(
+        id="reverse",
+        description="Reverse complement",
+        sequence=reverse_complement(seq)
+    )
+
+    assert find_orfs(reverse_seq) == [
+        "ATGGGGTAA"
+    ]
+
+
+def test_find_orfs_forward_still_works():
+    seq = Sequence(
+        id="seq1",
+        description="Forward ORF",
+        sequence="ATGAAATAG"
+    )
+
+    assert find_orfs(seq) == [
+        "ATGAAATAG"
+    ]
+
+
