@@ -218,6 +218,3 @@ def find_orfs(sequence: Sequence) -> list[str]:
     return orfs
 
 
-
-
-
