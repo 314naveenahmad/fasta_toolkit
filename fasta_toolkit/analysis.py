@@ -30,7 +30,6 @@ def nucleotide_count(sequence: Sequence) -> dict[str, int]:
     return counts
 
 
-
 def gc_content(sequence: Sequence) -> float:
     """
     Calculates the GC content of a given sequence.
